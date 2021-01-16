@@ -1,0 +1,49 @@
+#!/usr/bin/python
+import psutil
+import sys
+
+cpu = psutil.cpu_times()
+memory = psutil.virtual_memory()
+
+def get_cpu():
+    print("system.cpu.idle", round(cpu.idle, 1))
+    print("system.cpu.user", round(cpu.user, 1))
+    try:
+        print("system.cpu.guest", round(cpu.guest, 1))
+    except AttributeError:
+        pass
+    try:
+        print("system.cpu.iowait", round(cpu.iowait, 1))
+    except AttributeError:
+        pass
+    try:
+        print("system.cpu.stolen", round(cpu.steal, 1))
+    except AttributeError:
+        pass
+    print("system.cpu.system", round(cpu.system, 1))
+
+def get_memory():
+    print("virtual total", memory.total)
+    print("virtual used", memory.used)
+    print("virtual free", memory.free)
+    try:
+        print("virtual shared", memory.shared)
+    except AttributeError:
+        pass
+
+def usage():
+    print('Get cpu metrics: ./metrics cpu')
+    print('Get memory metrics: ./metrics mem')
+    
+if __name__ == "__main__":
+    arg = ''
+    try:
+        arg = sys.argv[1]
+    except IndexError:
+        pass
+    if arg == 'cpu':
+        get_cpu()
+    elif arg == 'mem':
+        get_memory()
+    else:
+        usage()
